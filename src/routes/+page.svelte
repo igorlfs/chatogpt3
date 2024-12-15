@@ -19,17 +19,8 @@
 
   let chats: Chat[] = $state(data.chats);
 
-  // TODO properly handle scrolling
-
   const sendMessage = async () => {
     history.push(currentMessage);
-
-    // Learn more about Tauri commands at https://tauri.app/develop/calling-rust/
-    // await invoke("plugin:database|add_chat", {
-    //   title: "Foo",
-    //   summary: "Bar",
-    // });
-    // chats = await invoke("plugin:database|list_chats");
   };
 
   const addChat = async () => {
@@ -143,7 +134,7 @@
   </div>
 
   <div class="basis-3/4 flex flex-col justify-between">
-    <div class="overflow-y-auto max-h-screen">
+    <div class="overflow-y-auto flex flex-col h-[85vh]">
       {#each history as message, i}
         {@const isEven = i % 2 === 0}
         <div
@@ -165,9 +156,9 @@
       {/each}
     </div>
 
-    <form onsubmit={sendMessage} class="flex flex-row items-center">
+    <form onsubmit={sendMessage} class="flex flex-row items-center h-[10vh]">
       <textarea
-        class="flex-1 mx-2 bg-crust mb-3 text-text py-1 px-2 rounded-md"
+        class="flex-1 mx-2 bg-crust mb-3 text-text py-1 px-2 rounded-md z-100"
         placeholder="Write a message"
         bind:value={currentMessage}
         onkeypress={async (event) => {
