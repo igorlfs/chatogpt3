@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-add-message"
+description = "Enables the add_message command without any pre-configured scope."
+commands.allow = ["add_message"]
+
+[[permission]]
+identifier = "deny-add-message"
+description = "Denies the add_message command without any pre-configured scope."
+commands.deny = ["add_message"]

@@ -5,4 +5,6 @@ permissions = [
     "allow-list-chats",
     "allow-delete-chat",
     "allow-update-chat",
+    "allow-add-message",
+    "allow-get-messages",
 ]

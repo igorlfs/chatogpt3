@@ -5,3 +5,12 @@ diesel::table! {
         summary -> Text,
     }
 }
+
+diesel::table! {
+    messages (id) {
+        id -> Integer,
+        content -> Text,
+        author -> Text,
+        chat_id -> Integer,
+    }
+}

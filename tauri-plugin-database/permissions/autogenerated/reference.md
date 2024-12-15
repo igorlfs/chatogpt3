@@ -6,6 +6,8 @@ Default permissions for the plugin
 - `allow-list-chats`
 - `allow-delete-chat`
 - `allow-update-chat`
+- `allow-add-message`
+- `allow-get-messages`
 
 ## Permission Table
 
@@ -45,6 +47,32 @@ Denies the add_chat command without any pre-configured scope.
 <tr>
 <td>
 
+`database:allow-add-message`
+
+</td>
+<td>
+
+Enables the add_message command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`database:deny-add-message`
+
+</td>
+<td>
+
+Denies the add_message command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
 `database:allow-delete-chat`
 
 </td>
@@ -64,6 +92,32 @@ Enables the delete_chat command without any pre-configured scope.
 <td>
 
 Denies the delete_chat command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`database:allow-get-messages`
+
+</td>
+<td>
+
+Enables the get_messages command without any pre-configured scope.
+
+</td>
+</tr>
+
+<tr>
+<td>
+
+`database:deny-get-messages`
+
+</td>
+<td>
+
+Denies the get_messages command without any pre-configured scope.
 
 </td>
 </tr>

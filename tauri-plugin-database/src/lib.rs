@@ -5,6 +5,7 @@ mod objects;
 mod schema;
 
 use commands::chats::*;
+use commands::messages::*;
 use connection::{establish_connection, get_connection_url};
 use diesel_migrations::EmbeddedMigrations;
 use diesel_migrations::{embed_migrations, MigrationHarness};
@@ -34,7 +35,9 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             add_chat,
             list_chats,
             delete_chat,
-            update_chat
+            update_chat,
+            add_message,
+            get_messages,
         ])
         .setup(|app, _| {
             let app_path = app

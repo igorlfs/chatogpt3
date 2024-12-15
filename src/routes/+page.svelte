@@ -3,24 +3,45 @@
   import SendIcon from "$lib/components/icons/SendIcon.svelte";
   import UserIcon from "$lib/components/icons/UserIcon.svelte";
   import { invoke } from "@tauri-apps/api/core";
-  import type { Chat, NewChat } from "./types";
+  import type { Chat, Message, NewChat, NewMessage } from "./types";
   import type { PageData } from "./$types";
   import PlusIcon from "$lib/components/icons/PlusIcon.svelte";
   import TrashIcon from "$lib/components/icons/TrashIcon.svelte";
   import EditIcon from "$lib/components/icons/EditIcon.svelte";
   import SaveIcon from "$lib/components/icons/SaveIcon.svelte";
+  import { onMount } from "svelte";
 
-  let history: string[] = $state([]);
   let currentMessage = $state("");
-
-  let selectedConversation = $state(0);
 
   let { data }: { data: PageData } = $props();
 
   let chats: Chat[] = $state(data.chats);
 
+  let selectedChat = $state(0);
+  let history: Message[] = $state([]);
+
+  onMount(async () => {
+    await updateHistory();
+  });
+
+  const updateHistory = async () => {
+    history = await invoke("plugin:database|get_messages", {
+      chat: chats[selectedChat].id,
+    });
+  };
+
   const sendMessage = async () => {
-    history.push(currentMessage);
+    let userMessage: NewMessage = {
+      content: currentMessage,
+      author: "user",
+      chatId: chats[selectedChat].id,
+    };
+
+    let id: number = await invoke("plugin:database|add_message", {
+      newMessage: { ...userMessage },
+    });
+
+    history.push({ ...userMessage, id });
   };
 
   const addChat = async () => {
@@ -42,6 +63,17 @@
     await invoke("plugin:database|delete_chat", { id });
 
     chats.splice(idx, 1);
+
+    if (idx === selectedChat) {
+      // If we removed the last chat, its index no longer belongs in the array
+      selectedChat = idx === chats.length ? idx - 1 : idx;
+      // But we also have to handle the case where there's a single chat
+      if (selectedChat >= 0) {
+        await updateHistory();
+      } else {
+        history = [];
+      }
+    }
   };
 
   const updateChat = async (idx: number) => {
@@ -61,17 +93,16 @@
       editingChat = chats[editingChatIndex];
     }
   });
-
-  $inspect(chats);
 </script>
 
 <div class="flex">
-  <div class="basis-1/4 h-screen flex flex-col bg-crust overflow-y-auto">
+  <div class="basis-1/4 h-screen flex flex-col bg-mantle overflow-y-auto">
     <div class="flex flex-col gap-3">
       <ul>
         {#each chats as chat, i}
+          {@const isSelected = selectedChat === i}
           <li
-            class={`${selectedConversation === i ? "bg-base" : "bg-mantle"} px-3 hover:bg-base py-2 border-b-base border-b-2`}
+            class={`${isSelected ? "bg-surface0" : "bg-crust hover:bg-base"} px-3 py-2 border-b-base border-b-2`}
           >
             <div class="flex justify-between">
               {#if editingChatIndex === i}
@@ -88,11 +119,18 @@
               {:else}
                 {@const title = chat.title}
                 {@const chatTitle =
-                  title.length > 12 ? `${title.slice(0, 12)}...` : title}
+                  title.length > 9 ? `${title.slice(0, 9)}...` : title}
                 {@const summary = chat.summary}
                 {@const chatSummary =
-                  summary.length > 14 ? `${summary.slice(0, 14)}...` : summary}
-                <div>
+                  summary.length > 10 ? `${summary.slice(0, 10)}...` : summary}
+                <div
+                  class="cursor-default flex-1"
+                  aria-hidden={true}
+                  onclick={async () => {
+                    selectedChat = i;
+                    await updateHistory();
+                  }}
+                >
                   <p class="text-text">{chatTitle}</p>
                   <p class="text-subtext text-sm">{chatSummary}</p>
                 </div>
@@ -100,20 +138,20 @@
               <div class="flex flex-row gap-3">
                 {#if editingChatIndex !== i}
                   <button
-                    class="text-surface2 hover:text-lavender rounded-full"
+                    class={`${isSelected ? "text-overlay0" : "text-surface1"} hover:text-lavender rounded-full`}
                     onclick={() => (editingChatIndex = i)}
                   >
                     <EditIcon />
                   </button>
                   <button
-                    class="text-surface2 hover:text-lavender rounded-full"
+                    class={`${isSelected ? "text-overlay0" : "text-surface1"} hover:text-lavender rounded-full`}
                     onclick={async () => await deleteChat(i)}
                   >
                     <TrashIcon />
                   </button>
                 {:else}
                   <button
-                    class="text-surface2 hover:text-lavender rounded-full"
+                    class={`${isSelected ? "text-overlay0" : "text-surface1"} hover:text-lavender rounded-full`}
                     onclick={async () => await updateChat(i)}
                   >
                     <SaveIcon />
@@ -135,22 +173,22 @@
 
   <div class="basis-3/4 flex flex-col justify-between">
     <div class="overflow-y-auto flex flex-col h-[85vh]">
-      {#each history as message, i}
-        {@const isEven = i % 2 === 0}
+      {#each history as message}
+        {@const isUser = message.author === "user"}
         <div
-          class={`flex ${isEven ? "flex-row" : "flex-row-reverse"} items-center *:my-2`}
+          class={`flex ${isUser ? "flex-row" : "flex-row-reverse"} items-center *:my-2`}
         >
           <div class="mx-2 text-text">
-            {#if isEven}
+            {#if isUser}
               <UserIcon />
             {:else}
               <BotIcon />
             {/if}
           </div>
           <p
-            class={`text-text bg-mantle rounded-lg p-2 ${isEven ? "mr-2" : "ml-2"}`}
+            class={`text-text bg-mantle rounded-lg p-2 ${isUser ? "mr-2" : "ml-2"}`}
           >
-            {message}
+            {message.content}
           </p>
         </div>
       {/each}

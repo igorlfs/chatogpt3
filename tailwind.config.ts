@@ -10,7 +10,10 @@ const mantle = "#181825";
 const crust = "#11111b";
 
 const surface0 = "#313244";
+const surface1 = "#45475a";
 const surface2 = "#585b70";
+
+const overlay0 = "#6c7086";
 
 const blue = "#89b4fa";
 
@@ -24,7 +27,9 @@ export default {
       subtext,
       lavender,
       surface0,
+      surface1,
       surface2,
+      overlay0,
       base,
       mantle,
       crust,
