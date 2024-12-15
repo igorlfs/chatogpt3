@@ -10,13 +10,12 @@ pub fn add_message(new_message: NewMessage) -> i32 {
 
     use crate::schema::messages;
 
-    let todo = diesel::insert_into(messages::table)
+    diesel::insert_into(messages::table)
         .values(&new_message)
         .returning(Message::as_returning())
         .get_result(conn)
-        .expect("Error adding new message");
-
-    todo.id
+        .expect("Error adding new message")
+        .id
 }
 
 #[tauri::command]
@@ -29,5 +28,5 @@ pub fn get_messages(chat: i32) -> Vec<Message> {
         .filter(chat_id.is(chat))
         .select(Message::as_select())
         .load(conn)
-        .expect("Error loading chats")
+        .expect("Error getting messages")
 }

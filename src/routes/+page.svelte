@@ -52,15 +52,15 @@
       summary: `Chat #${i + 1}`,
     };
 
-    const id: number = await invoke("plugin:database|add_chat", newChat);
+    const id: number = await invoke("plugin:database|add_chat", {
+      newChat: { ...newChat },
+    });
 
     chats.push({ ...newChat, id });
   };
 
   const deleteChat = async (idx: number) => {
-    const id = chats[idx].id;
-
-    await invoke("plugin:database|delete_chat", { id });
+    await invoke("plugin:database|delete_chat", { chatId: chats[idx].id });
 
     chats.splice(idx, 1);
 
@@ -78,8 +78,7 @@
 
   const updateChat = async (idx: number) => {
     chats[idx] = await invoke("plugin:database|update_chat", {
-      id: chats[idx].id,
-      ...editingChat,
+      chat: { ...editingChat, id: chats[idx].id },
     });
 
     editingChatIndex = -1;

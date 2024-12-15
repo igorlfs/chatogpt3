@@ -1,35 +1,55 @@
 use crate::{
     connection::establish_connection,
-    models::Chat,
-    objects::chats::{add, delete, list, update},
+    models::{Chat, NewChat},
 };
+use diesel::prelude::*;
 
 #[tauri::command]
-pub fn add_chat(title: &str, summary: &str) -> i32 {
+pub fn add_chat(new_chat: NewChat) -> i32 {
     let conn = &mut establish_connection();
 
-    let todo = add(conn, title, summary);
+    use crate::schema::chats;
 
-    todo.id
+    diesel::insert_into(chats::table)
+        .values(&new_chat)
+        .returning(Chat::as_returning())
+        .get_result(conn)
+        .expect("Error adding new chat")
+        .id
 }
 
 #[tauri::command]
 pub fn list_chats() -> Vec<Chat> {
     let conn = &mut establish_connection();
 
-    list(conn)
+    use crate::schema::chats::dsl::*;
+
+    chats
+        .select(Chat::as_select())
+        .load(conn)
+        .expect("Error loading chats")
 }
 
 #[tauri::command]
-pub fn delete_chat(id: i32) {
+pub fn delete_chat(chat_id: i32) {
     let conn = &mut establish_connection();
 
-    delete(conn, id)
+    use crate::schema::chats::dsl::*;
+
+    diesel::delete(chats.filter(id.eq(chat_id)))
+        .execute(conn)
+        .expect("Error deleting posts");
 }
 
 #[tauri::command]
-pub fn update_chat(id: i32, title: &str, summary: &str) -> Chat {
+pub fn update_chat(chat: Chat) -> Chat {
     let conn = &mut establish_connection();
 
-    update(conn, id, title, summary)
+    use crate::schema::chats::dsl::*;
+
+    diesel::update(chats.find(chat.id))
+        .set((title.eq(chat.title), summary.eq(chat.summary)))
+        .returning(Chat::as_returning())
+        .get_result(conn)
+        .unwrap()
 }

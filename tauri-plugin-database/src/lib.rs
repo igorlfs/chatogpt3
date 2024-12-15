@@ -1,7 +1,6 @@
 mod commands;
 mod connection;
 mod models;
-mod objects;
 mod schema;
 
 use commands::chats::*;
@@ -24,8 +23,11 @@ pub fn setup_db(connection_url: &str) -> Result<(), Box<dyn Error + Send + Sync 
         let mut locked_url = get_connection_url().lock().unwrap();
         *locked_url = connection_url.to_owned();
     }
+
     let mut conn = establish_connection();
+
     conn.run_pending_migrations(MIGRATIONS).unwrap();
+
     Ok(())
 }
 
@@ -52,8 +54,6 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
             if let Err(e) = create_dir_all(&app_path) {
                 println!("Problem creating app directory: {:?}", e);
             }
-
-            println!("Connection URL: {}", conn_url);
 
             if let Err(e) = setup_db(&conn_url) {
                 println!("Database setup failed: {:?}", e);
