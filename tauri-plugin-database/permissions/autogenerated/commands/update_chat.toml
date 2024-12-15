@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-update-chat"
+description = "Enables the update_chat command without any pre-configured scope."
+commands.allow = ["update_chat"]
+
+[[permission]]
+identifier = "deny-update-chat"
+description = "Denies the update_chat command without any pre-configured scope."
+commands.deny = ["update_chat"]

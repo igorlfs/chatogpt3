@@ -1,0 +1,8 @@
+[default]
+description = "Default permissions for the plugin"
+permissions = [
+    "allow-add-chat",
+    "allow-list-chats",
+    "allow-delete-chat",
+    "allow-update-chat",
+]

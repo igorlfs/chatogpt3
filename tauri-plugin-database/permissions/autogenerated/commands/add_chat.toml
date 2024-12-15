@@ -1,0 +1,13 @@
+# Automatically generated - DO NOT EDIT!
+
+"$schema" = "../../schemas/schema.json"
+
+[[permission]]
+identifier = "allow-add-chat"
+description = "Enables the add_chat command without any pre-configured scope."
+commands.allow = ["add_chat"]
+
+[[permission]]
+identifier = "deny-add-chat"
+description = "Denies the add_chat command without any pre-configured scope."
+commands.deny = ["add_chat"]
