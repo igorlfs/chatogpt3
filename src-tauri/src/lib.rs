@@ -1,4 +1,5 @@
 mod commands;
+pub mod strings;
 
 use commands::*;
 

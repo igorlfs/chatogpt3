@@ -13,9 +13,9 @@
 
   let currentMessage = $state("");
 
-  let { data }: { data: PageData } = $props();
+  const { data }: { data: PageData } = $props();
 
-  let chats: Chat[] = $state(data.chats);
+  const chats: Chat[] = $state(data.chats);
 
   let selectedChat = $state(0);
   let history: Message[] = $state([]);
@@ -33,7 +33,7 @@
   const sendMessage = async () => {
     const chatId = chats[selectedChat].id;
 
-    let userMessage: NewMessage = {
+    const userMessage: NewMessage = {
       content: currentMessage,
       author: "user",
       chatId,
@@ -49,7 +49,7 @@
       message: currentMessage,
     });
 
-    let botMessage: NewMessage = {
+    const botMessage: NewMessage = {
       content: reply,
       author: "bot",
       chatId,
