@@ -31,17 +31,35 @@
   };
 
   const sendMessage = async () => {
+    const chatId = chats[selectedChat].id;
+
     let userMessage: NewMessage = {
       content: currentMessage,
       author: "user",
-      chatId: chats[selectedChat].id,
+      chatId,
     };
 
-    let id: number = await invoke("plugin:database|add_message", {
+    const userMessageId: number = await invoke("plugin:database|add_message", {
       newMessage: { ...userMessage },
     });
 
-    history.push({ ...userMessage, id });
+    history.push({ ...userMessage, id: userMessageId });
+
+    const reply: string = await invoke("get_bot_reply", {
+      message: currentMessage,
+    });
+
+    let botMessage: NewMessage = {
+      content: reply,
+      author: "bot",
+      chatId,
+    };
+
+    const botMessageId: number = await invoke("plugin:database|add_message", {
+      newMessage: { ...botMessage },
+    });
+
+    history.push({ ...botMessage, id: botMessageId });
   };
 
   const addChat = async () => {

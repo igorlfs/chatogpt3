@@ -35,6 +35,7 @@ pub struct Message {
 
 #[derive(Insertable, Deserialize)]
 #[diesel(table_name = messages)]
+// See https://github.com/serde-rs/serde/issues/1435
 #[serde(rename_all = "camelCase")]
 pub struct NewMessage<'a> {
     pub content: &'a str,

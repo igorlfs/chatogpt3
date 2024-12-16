@@ -1,3 +1,4 @@
+-- https://stackoverflow.com/a/5901100
 PRAGMA foreign_keys = ON;
 
 CREATE TABLE messages (

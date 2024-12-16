@@ -47,6 +47,9 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                 .app_local_data_dir()
                 .expect("No App path was found!");
 
+            // See https://github.com/bpevs/tauri_diesel_sqlite_example/blob/main/src-db/src/lib.rs
+            // This man is a literal god send
+
             let db_file_name = "database.db";
 
             let conn_url = format!("sqlite://{}/{}", app_path.display(), db_file_name);
