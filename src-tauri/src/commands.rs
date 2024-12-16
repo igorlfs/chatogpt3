@@ -1,7 +1,13 @@
 use rand::{thread_rng, Rng};
+use std::env;
+use tauri_plugin_database::commands::messages::get_messages;
 
 use crate::{
     cipher::{caesar_cipher, vigenere_cipher},
+    gemini::{
+        get_chat_reponse,
+        lib::{Content, Part},
+    },
     strings::{
         alternate_string_case, is_string_a_password_secure, is_string_an_email_address,
         is_string_ordered,
@@ -9,7 +15,29 @@ use crate::{
 };
 
 #[tauri::command]
-pub fn get_bot_reply(message: &str) -> String {
+pub fn get_bot_reply(message: &str, chat_id: i32) -> String {
+    let apikey = env::var("APIKEY");
+
+    // TODO we shouldn't always default to gemini
+    if apikey.is_ok() {
+        let apikey = apikey.unwrap();
+
+        let chat_content = get_messages(chat_id)
+            .into_iter()
+            .map(|message| Content {
+                role: if message.author == "user" {
+                    "user".to_string()
+                } else {
+                    "model".to_string()
+                },
+                parts: vec![Part::Text(message.content.clone())],
+            })
+            .collect();
+
+        let (reply, _) = get_chat_reponse(&apikey, chat_content);
+
+        return reply.unwrap();
+    }
 
     const NUM_POSSIBLE_ANSWERS: i32 = 7;
 

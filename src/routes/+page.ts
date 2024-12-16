@@ -12,8 +12,7 @@ export const load: Load = async () => {
     };
 
     const id: number = await invoke("plugin:database|add_chat", {
-      title: "New Chat",
-      summary: "Your first chat",
+      newChat: { ...newChat },
     });
 
     chats.push({ ...newChat, id });

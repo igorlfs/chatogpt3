@@ -47,6 +47,7 @@
 
     const reply: string = await invoke("get_bot_reply", {
       message: currentMessage,
+      chatId,
     });
 
     const botMessage: NewMessage = {

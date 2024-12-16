@@ -1,4 +1,4 @@
-mod commands;
+pub mod commands;
 mod connection;
 mod models;
 mod schema;
