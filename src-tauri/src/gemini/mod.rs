@@ -2,7 +2,7 @@ pub mod lib;
 
 use lib::{Content, GenerateContentRequest, GenerateContentResponse, GenerationConfig, Part};
 
-pub fn get_chat_reponse(apikey: &str, history: Vec<Content>) -> (Option<String>, Option<String>) {
+pub fn get_chat_response(apikey: &str, history: Vec<Content>) -> (Option<String>, Option<String>) {
     let payload = GenerateContentRequest {
         contents: history,
         generation_config: Some(GenerationConfig {

@@ -5,7 +5,7 @@ use tauri_plugin_database::commands::messages::get_messages;
 use crate::{
     cipher::{caesar_cipher, vigenere_cipher},
     gemini::{
-        get_chat_reponse,
+        get_chat_response,
         lib::{Content, Part},
     },
     strings::{
@@ -34,7 +34,7 @@ pub fn get_bot_reply(message: &str, chat_id: i32) -> String {
             })
             .collect();
 
-        let (reply, _) = get_chat_reponse(&apikey, chat_content);
+        let (reply, _) = get_chat_response(&apikey, chat_content);
 
         return reply.unwrap();
     }
