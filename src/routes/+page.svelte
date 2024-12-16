@@ -76,6 +76,12 @@
     });
 
     chats.push({ ...newChat, id });
+
+    // If there were no chats and we just added in the first one,
+    // We have to update `selectedChat` so it doesn't contain garbage
+    if (chats.length === 1) {
+      selectedChat = 0;
+    }
   };
 
   const deleteChat = async (idx: number) => {
