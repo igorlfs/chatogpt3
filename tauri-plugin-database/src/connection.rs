@@ -3,6 +3,8 @@ use std::sync::Mutex;
 
 use std::sync::OnceLock;
 
+// Hacky way to avoid using lib
+// See https://github.com/rust-lang-nursery/lazy-static.rs
 pub fn get_connection_url() -> &'static Mutex<String> {
     static CONNECTION_URL: OnceLock<Mutex<String>> = OnceLock::new();
     CONNECTION_URL.get_or_init(|| Mutex::new(String::new()))
