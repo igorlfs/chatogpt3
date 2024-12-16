@@ -15,7 +15,7 @@ use crate::{
 };
 
 #[tauri::command]
-pub fn get_bot_reply(message: &str, chat_id: i32) -> String {
+pub async fn get_bot_reply(message: String, chat_id: i32) -> String {
     let apikey = env::var("APIKEY");
 
     // TODO we shouldn't always default to gemini
@@ -30,16 +30,18 @@ pub fn get_bot_reply(message: &str, chat_id: i32) -> String {
                 } else {
                     "model".to_string()
                 },
-                parts: vec![Part::Text(message.content.clone())],
+                parts: vec![Part::Text(message.content)],
             })
             .collect();
 
-        let (reply, _) = get_chat_response(&apikey, chat_content);
+        let (reply, _) = get_chat_response(&apikey, chat_content).await;
 
         return reply.unwrap();
     }
 
     const NUM_POSSIBLE_ANSWERS: i32 = 7;
+
+    let message = message.as_str();
 
     match thread_rng().gen_range(0..=NUM_POSSIBLE_ANSWERS) {
         0 => "Pong!".to_string(),

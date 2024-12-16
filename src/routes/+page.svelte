@@ -30,11 +30,19 @@
     });
   };
 
-  const sendMessage = async () => {
+  const cleanAndSendMessage = async () => {
+    // Use a parameter and reset the current message
+    // So we can multiple messages (since code is async)
+    const messageContent = currentMessage;
+    currentMessage = "";
+    await sendMessage(messageContent);
+  };
+
+  const sendMessage = async (messageContent: string) => {
     const chatId = chats[selectedChat].id;
 
     const userMessage: NewMessage = {
-      content: currentMessage,
+      content: messageContent,
       author: "user",
       chatId,
     };
@@ -46,7 +54,7 @@
     history.push({ ...userMessage, id: userMessageId });
 
     const reply: string = await invoke("get_bot_reply", {
-      message: currentMessage,
+      message: messageContent,
       chatId,
     });
 
@@ -218,7 +226,10 @@
       {/each}
     </div>
 
-    <form onsubmit={sendMessage} class="flex flex-row items-center h-[10vh]">
+    <form
+      onsubmit={cleanAndSendMessage}
+      class="flex flex-row items-center h-[10vh]"
+    >
       <textarea
         class="flex-1 mx-2 bg-crust mb-3 text-text py-1 px-2 rounded-md z-100"
         placeholder="Write a message"
@@ -228,10 +239,7 @@
             // Don't output newline
             event.preventDefault();
 
-            await sendMessage();
-
-            // Reset message
-            currentMessage = "";
+            await cleanAndSendMessage();
           }
         }}
       ></textarea>
