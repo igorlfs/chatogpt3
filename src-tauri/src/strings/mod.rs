@@ -1,7 +1,7 @@
 mod util;
 
 use unicode_segmentation::UnicodeSegmentation;
-use util::{are_words_ordered, matches_email_regex};
+use util::{are_words_ordered, get_password_unsafety_reason, matches_email_regex};
 
 pub fn alternate_string_case(string: &str) -> String {
     let graphemes = string.graphemes(true).collect::<Vec<&str>>();
@@ -18,7 +18,7 @@ pub fn alternate_string_case(string: &str) -> String {
         .collect()
 }
 
-pub fn match_email_address(string: &str) -> String {
+pub fn is_string_an_email_address(string: &str) -> String {
     if matches_email_regex(string) {
         format!("{string} 📩✅")
     } else {
@@ -34,9 +34,19 @@ pub fn is_string_ordered(string: &str) -> String {
     }
 }
 
+pub fn is_string_a_password_secure(string: &str) -> String {
+    if let Some(reason) = get_password_unsafety_reason(string) {
+        format!("Password {string} is unsafe. Reason: {reason}.")
+    } else {
+        "Password is secure.".to_string()
+    }
+}
+
 #[cfg(test)]
 mod test {
-    use super::{alternate_string_case, is_string_ordered, match_email_address};
+    use crate::strings::is_string_a_password_secure;
+
+    use super::{alternate_string_case, is_string_an_email_address, is_string_ordered};
 
     #[test]
     fn test_alternate_case_basic_string() {
@@ -76,13 +86,25 @@ mod test {
 
     #[test]
     fn test_match_non_email() {
-        let is_email = match_email_address("foo");
+        let is_email = is_string_an_email_address("foo");
         assert!(is_email.contains('❎'));
     }
 
     #[test]
     fn test_match_email() {
-        let is_email = match_email_address("foo@bar.com");
+        let is_email = is_string_an_email_address("foo@bar.com");
         assert!(is_email.contains('✅'));
+    }
+
+    #[test]
+    fn test_secure_password() {
+        let is_safe = is_string_a_password_secure("abcDef01234@");
+        assert!(is_safe.contains("secure"));
+    }
+
+    #[test]
+    fn test_unsafe_password() {
+        let is_safe = is_string_a_password_secure("");
+        assert!(is_safe.contains("unsafe"));
     }
 }
