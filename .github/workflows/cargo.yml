@@ -1,0 +1,32 @@
+name: "Test Suite"
+on:
+  push:
+  pull_request:
+
+# Make sure CI fails on all warnings, including Clippy lints
+env:
+  RUSTFLAGS: "-Dwarnings"
+
+jobs:
+  test:
+    strategy:
+      matrix:
+        runs-on: [ubuntu-latest, macos-latest, windows-latest]
+
+    runs-on: ${{ matrix.runs-on }}
+    name: Testing
+    steps:
+      - uses: actions/checkout@v3
+      - name: Create Build Dir
+        # CI Fails if we don't create the build dir
+        run: mkdir build
+      - name: Update packages
+        run: sudo apt update
+      - name: Install dependencies
+        run: sudo apt install -y libwebkit2gtk-4.1-dev build-essential curl wget file libxdo-dev libssl-dev libayatana-appindicator3-dev librsvg2-dev
+      - name: "Test local rust"
+        uses: Kristories/cargo-test@v1.0.0
+        with:
+          manifest-path: "./src-tauri/Cargo.toml"
+      - name: Run Clippy
+        run: cargo clippy --all-targets --all-features --no-deps --manifest-path src-tauri/Cargo.toml
