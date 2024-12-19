@@ -26,7 +26,8 @@ pub fn setup_db(connection_url: &str) -> Result<(), Box<dyn Error + Send + Sync 
 
     let mut conn = establish_connection();
 
-    conn.run_pending_migrations(MIGRATIONS).unwrap();
+    conn.run_pending_migrations(MIGRATIONS)
+        .unwrap_or_else(|error| panic!("Error running database migrations: {error:?}"));
 
     Ok(())
 }
