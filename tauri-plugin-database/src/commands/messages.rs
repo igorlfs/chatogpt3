@@ -5,7 +5,7 @@ use crate::{
 use diesel::prelude::*;
 
 #[tauri::command]
-pub fn add_message(new_message: NewMessage) -> i32 {
+pub async fn add_message(new_message: NewMessage) -> i32 {
     let conn = &mut establish_connection();
 
     use crate::schema::messages;
@@ -19,7 +19,7 @@ pub fn add_message(new_message: NewMessage) -> i32 {
 }
 
 #[tauri::command]
-pub fn get_messages(chat: i32) -> Vec<Message> {
+pub async fn get_messages(chat: i32) -> Vec<Message> {
     let conn = &mut establish_connection();
 
     use crate::schema::messages::dsl::*;

@@ -13,9 +13,9 @@ pub struct Chat {
 
 #[derive(Insertable, Deserialize)]
 #[diesel(table_name = chats)]
-pub struct NewChat<'a> {
-    pub title: &'a str,
-    pub summary: &'a str,
+pub struct NewChat {
+    pub title: String,
+    pub summary: String,
 }
 
 use super::schema::messages;
@@ -37,8 +37,8 @@ pub struct Message {
 #[diesel(table_name = messages)]
 // See https://github.com/serde-rs/serde/issues/1435
 #[serde(rename_all = "camelCase")]
-pub struct NewMessage<'a> {
-    pub content: &'a str,
-    pub author: &'a str,
+pub struct NewMessage {
+    pub content: String,
+    pub author: String,
     pub chat_id: i32,
 }

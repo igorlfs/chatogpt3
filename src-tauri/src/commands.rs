@@ -21,6 +21,7 @@ pub async fn get_bot_reply(message: String, chat_id: i32) -> String {
     // TODO we shouldn't always default to gemini
     if let Ok(apikey) = apikey {
         let chat_content = get_messages(chat_id)
+            .await
             .into_iter()
             .map(|message| Content {
                 role: if message.author == "user" {

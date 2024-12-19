@@ -5,7 +5,7 @@ use crate::{
 use diesel::prelude::*;
 
 #[tauri::command]
-pub fn add_chat(new_chat: NewChat) -> i32 {
+pub async fn add_chat(new_chat: NewChat) -> i32 {
     let conn = &mut establish_connection();
 
     use crate::schema::chats;
@@ -19,7 +19,7 @@ pub fn add_chat(new_chat: NewChat) -> i32 {
 }
 
 #[tauri::command]
-pub fn list_chats() -> Vec<Chat> {
+pub async fn list_chats() -> Vec<Chat> {
     let conn = &mut establish_connection();
 
     use crate::schema::chats::dsl::*;
@@ -31,7 +31,7 @@ pub fn list_chats() -> Vec<Chat> {
 }
 
 #[tauri::command]
-pub fn delete_chat(chat_id: i32) {
+pub async fn delete_chat(chat_id: i32) {
     let conn = &mut establish_connection();
 
     use crate::schema::chats::dsl::*;
@@ -42,7 +42,7 @@ pub fn delete_chat(chat_id: i32) {
 }
 
 #[tauri::command]
-pub fn update_chat(chat: Chat) -> Chat {
+pub async fn update_chat(chat: Chat) -> Chat {
     let conn = &mut establish_connection();
 
     use crate::schema::chats::dsl::*;
