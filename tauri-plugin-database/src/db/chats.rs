@@ -50,7 +50,7 @@ mod test {
     pub const MIGRATIONS: EmbeddedMigrations = embed_migrations!("../migrations");
 
     #[test]
-    fn test_add_chat() {
+    fn add_chat() {
         let mut conn = SqliteConnection::establish(":memory:").unwrap();
 
         conn.run_pending_migrations(MIGRATIONS).unwrap();
@@ -67,7 +67,7 @@ mod test {
     }
 
     #[test]
-    fn test_list_no_chats() {
+    fn list_no_chats() {
         let mut conn = SqliteConnection::establish(":memory:").unwrap();
 
         conn.run_pending_migrations(MIGRATIONS).unwrap();
@@ -78,7 +78,7 @@ mod test {
     }
 
     #[test]
-    fn test_list_single_chat() {
+    fn list_single_chat() {
         let mut conn = SqliteConnection::establish(":memory:").unwrap();
 
         conn.run_pending_migrations(MIGRATIONS).unwrap();
@@ -105,7 +105,7 @@ mod test {
     }
 
     #[test]
-    fn test_delete() {
+    fn delete_chat() {
         let mut conn = SqliteConnection::establish(":memory:").unwrap();
 
         conn.run_pending_migrations(MIGRATIONS).unwrap();
@@ -125,7 +125,7 @@ mod test {
     }
 
     #[test]
-    fn test_update_title_and_summary() {
+    fn update_title_and_summary() {
         let mut conn = SqliteConnection::establish(":memory:").unwrap();
 
         conn.run_pending_migrations(MIGRATIONS).unwrap();

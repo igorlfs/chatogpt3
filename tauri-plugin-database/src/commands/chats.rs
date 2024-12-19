@@ -1,9 +1,8 @@
 use crate::{
-    chats,
     connection::establish_connection,
+    db::chats,
     models::{Chat, NewChat},
 };
-use diesel::prelude::*;
 
 #[tauri::command]
 pub async fn add_chat(new_chat: NewChat) -> i32 {

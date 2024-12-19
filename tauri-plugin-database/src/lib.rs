@@ -1,6 +1,6 @@
-pub mod chats;
 pub mod commands;
 mod connection;
+pub mod db;
 mod models;
 mod schema;
 
