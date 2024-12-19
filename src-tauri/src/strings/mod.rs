@@ -38,7 +38,7 @@ pub fn is_string_a_password_secure(string: &str) -> String {
     if let Some(reason) = get_password_unsafety_reason(string) {
         format!("Password {string} is unsafe. Reason: {reason}.")
     } else {
-        "Password is secure.".to_string()
+        String::from("Password is secure.")
     }
 }
 

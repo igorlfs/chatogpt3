@@ -23,7 +23,7 @@ pub fn caesar_cipher(string: &str, shift: u32) -> String {
 pub fn vigenere_cipher(string: &str, key: &str) -> String {
     let key_size = key.chars().count();
     if key_size == 0 {
-        return string.to_string();
+        return String::from(string);
     }
     let uppercase_key = key.to_uppercase();
     let encrypted_text = String::from(string);

@@ -33,17 +33,19 @@ pub async fn get_chat_response(
                 let aux = &gemini_response.candidates[0].content.parts[0];
                 match aux {
                     Part::Text(text) => (Some(text.clone()), None),
-                    _ => (None, Some("Unexpected response from Gemini".to_string())),
+                    _ => (None, Some(String::from("Unexpected response from Gemini"))),
                 }
             }
             Err(e) => (
                 None,
-                Some(format!("An error occurred while processing the response: {}", e).to_string()),
+                Some(format!(
+                    "An error occurred while processing the response: {e}"
+                )),
             ),
         },
         Err(e) => (
             None,
-            Some(format!("An error occurred when making a request: {}", e).to_string()),
+            Some(format!("An error occurred when making a request: {e}")),
         ),
     }
 }

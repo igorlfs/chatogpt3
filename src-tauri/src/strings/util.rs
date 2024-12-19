@@ -22,17 +22,19 @@ pub fn are_words_ordered(string: &str) -> bool {
 
 pub fn get_password_unsafety_reason(string: &str) -> Option<String> {
     if string.len() < MIN_PASSWORD_LENGTH {
-        Some("it's too short".to_string())
+        Some(String::from("it's too short"))
     } else if !string.chars().any(|c| c.is_numeric()) {
-        Some("it doesn't contain any numbers".to_string())
+        Some(String::from("it doesn't contain any numbers"))
     } else if !string.chars().any(|c| c.is_alphabetic()) {
-        Some("it doesn't contain any letters".to_string())
+        Some(String::from("it doesn't contain any letters"))
     } else if !string.chars().any(|c| c.is_uppercase()) {
-        Some("it doesn't contain any uppercase letters".to_string())
+        Some(String::from("it doesn't contain any uppercase letters"))
     } else if !string.chars().any(|c| c.is_ascii_punctuation()) {
-        Some("it doesn't contain any recognized special characters".to_string())
+        Some(String::from(
+            "it doesn't contain any recognized special characters",
+        ))
     } else if string.to_lowercase().contains("password") {
-        Some("it shouldn't contain the word 'password'".to_string())
+        Some(String::from("it shouldn't contain the word 'password'"))
     } else {
         None
     }

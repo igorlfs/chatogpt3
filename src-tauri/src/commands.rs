@@ -19,16 +19,14 @@ pub async fn get_bot_reply(message: String, chat_id: i32) -> String {
     let apikey = env::var("APIKEY");
 
     // TODO we shouldn't always default to gemini
-    if apikey.is_ok() {
-        let apikey = apikey.unwrap();
-
+    if let Ok(apikey) = apikey {
         let chat_content = get_messages(chat_id)
             .into_iter()
             .map(|message| Content {
                 role: if message.author == "user" {
-                    "user".to_string()
+                    String::from("user")
                 } else {
-                    "model".to_string()
+                    String::from("model")
                 },
                 parts: vec![Part::Text(message.content)],
             })
@@ -36,7 +34,10 @@ pub async fn get_bot_reply(message: String, chat_id: i32) -> String {
 
         let (reply, _) = get_chat_response(&apikey, chat_content).await;
 
-        return reply.unwrap();
+        match reply {
+            Some(reply) => return reply,
+            None => return String::from("An error occured"),
+        };
     }
 
     const NUM_POSSIBLE_ANSWERS: i32 = 7;
@@ -44,7 +45,7 @@ pub async fn get_bot_reply(message: String, chat_id: i32) -> String {
     let message = message.as_str();
 
     match thread_rng().gen_range(0..=NUM_POSSIBLE_ANSWERS) {
-        0 => "Pong!".to_string(),
+        0 => String::from("Pong!"),
         // String-related methods
         1 => is_string_an_email_address(message),
         2 => is_string_ordered(message),
