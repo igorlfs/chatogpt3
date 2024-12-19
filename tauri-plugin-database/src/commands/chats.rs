@@ -1,4 +1,5 @@
 use crate::{
+    chats,
     connection::establish_connection,
     models::{Chat, NewChat},
 };
@@ -8,48 +9,26 @@ use diesel::prelude::*;
 pub async fn add_chat(new_chat: NewChat) -> i32 {
     let conn = &mut establish_connection();
 
-    use crate::schema::chats;
-
-    diesel::insert_into(chats::table)
-        .values(&new_chat)
-        .returning(Chat::as_returning())
-        .get_result(conn)
-        .expect("Error adding new chat")
-        .id
+    chats::add(conn, new_chat)
 }
 
 #[tauri::command]
 pub async fn list_chats() -> Vec<Chat> {
     let conn = &mut establish_connection();
 
-    use crate::schema::chats::dsl::*;
-
-    chats
-        .select(Chat::as_select())
-        .load(conn)
-        .expect("Error loading chats")
+    chats::list(conn)
 }
 
 #[tauri::command]
 pub async fn delete_chat(chat_id: i32) {
     let conn = &mut establish_connection();
 
-    use crate::schema::chats::dsl::*;
-
-    diesel::delete(chats.filter(id.eq(chat_id)))
-        .execute(conn)
-        .expect("Error deleting posts");
+    chats::delete(conn, chat_id)
 }
 
 #[tauri::command]
 pub async fn update_chat(chat: Chat) -> Chat {
     let conn = &mut establish_connection();
 
-    use crate::schema::chats::dsl::*;
-
-    diesel::update(chats.find(chat.id))
-        .set((title.eq(chat.title), summary.eq(chat.summary)))
-        .returning(Chat::as_returning())
-        .get_result(conn)
-        .unwrap()
+    chats::update(conn, chat)
 }

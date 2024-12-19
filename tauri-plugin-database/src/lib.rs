@@ -1,3 +1,4 @@
+pub mod chats;
 pub mod commands;
 mod connection;
 mod models;
