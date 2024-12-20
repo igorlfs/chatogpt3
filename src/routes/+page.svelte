@@ -13,6 +13,18 @@
 
   let currentMessage = $state("");
 
+  // https://stackoverflow.com/a/73987216
+  const scrollToBottom = (node: HTMLElement, _: Message[]) => {
+    const scroll = () =>
+      node.scroll({
+        top: node.scrollHeight,
+        behavior: "smooth",
+      });
+    scroll();
+
+    return { update: scroll };
+  };
+
   const { data }: { data: PageData } = $props();
 
   const chats: Chat[] = $state(data.chats);
@@ -204,7 +216,10 @@
   </div>
 
   <div class="basis-3/4 flex flex-col justify-between">
-    <div class="overflow-y-auto flex flex-col h-[85vh]">
+    <div
+      use:scrollToBottom={history}
+      class="overflow-y-auto flex flex-col h-[85vh]"
+    >
       {#each history as message}
         {@const isUser = message.author === "user"}
         <div
