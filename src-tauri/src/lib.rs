@@ -1,7 +1,5 @@
-pub mod cipher;
 mod commands;
 pub mod gemini;
-pub mod strings;
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
