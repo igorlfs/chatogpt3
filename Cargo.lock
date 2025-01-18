@@ -331,8 +331,6 @@ name = "chatogpt3"
 version = "0.1.0"
 dependencies = [
  "dotenvy",
- "rand 0.8.5",
- "regex",
  "reqwest",
  "serde",
  "serde_json",
@@ -340,7 +338,6 @@ dependencies = [
  "tauri-build",
  "tauri-plugin-database",
  "tauri-plugin-shell",
- "unicode-segmentation",
 ]
 
 [[package]]
