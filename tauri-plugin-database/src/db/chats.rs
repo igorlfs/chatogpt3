@@ -32,11 +32,13 @@ pub fn delete(conn: &mut SqliteConnection, chat_id: i32) {
 pub fn update(conn: &mut SqliteConnection, chat: Chat) -> Chat {
     use crate::schema::chats::dsl::*;
 
-    diesel::update(chats.find(chat.id))
+    let chat_id = chat.id;
+
+    diesel::update(chats.find(chat_id))
         .set((title.eq(chat.title), summary.eq(chat.summary)))
         .returning(Chat::as_returning())
         .get_result(conn)
-        .unwrap()
+        .unwrap_or_else(|_| panic!("Error updating chat with id `{chat_id}`"))
 }
 
 #[cfg(test)]

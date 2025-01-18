@@ -19,7 +19,7 @@ pub fn list(conn: &mut SqliteConnection, chat: i32) -> Vec<Message> {
         .filter(chat_id.is(chat))
         .select(Message::as_select())
         .load(conn)
-        .expect("Error getting messages")
+        .expect("Error loading messages")
 }
 
 #[cfg(test)]
