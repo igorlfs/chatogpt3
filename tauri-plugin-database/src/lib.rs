@@ -50,15 +50,11 @@ pub fn init<R: Runtime>() -> TauriPlugin<R> {
                 .expect("No App path was found!");
 
             // See https://github.com/bpevs/tauri_diesel_sqlite_example/blob/main/src-db/src/lib.rs
-            // This man is a literal god send
-
-            let db_file_name = "database.db";
-
-            let conn_url = format!("sqlite://{}/{}", app_path.display(), db_file_name);
-
             if let Err(e) = create_dir_all(&app_path) {
                 println!("Problem creating app directory: {:?}", e);
             }
+
+            let conn_url = format!("sqlite://{}/{}", app_path.display(), "database.db");
 
             if let Err(e) = setup_db(&conn_url) {
                 println!("Database setup failed: {:?}", e);
