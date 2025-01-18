@@ -3,7 +3,7 @@
   import SendIcon from "$lib/components/icons/SendIcon.svelte";
   import UserIcon from "$lib/components/icons/UserIcon.svelte";
   import { invoke } from "@tauri-apps/api/core";
-  import type { Chat, Message, NewChat, NewMessage } from "./types";
+  import type { Message, NewChat, NewMessage } from "./types";
   import type { PageData } from "./$types";
   import PlusIcon from "$lib/components/icons/PlusIcon.svelte";
   import TrashIcon from "$lib/components/icons/TrashIcon.svelte";
@@ -27,7 +27,7 @@
 
   const { data }: { data: PageData } = $props();
 
-  const chats: Chat[] = $state(data.chats);
+  const chats = $state(data.chats);
 
   let selectedChat = $state(0);
   let history: Message[] = $state([]);
@@ -43,8 +43,8 @@
   };
 
   const cleanAndSendMessage = async () => {
-    // Use a parameter and reset the current message
-    // So we can multiple messages (since code is async)
+    // Copy current message
+    // So we send can multiple messages (since code is async)
     const messageContent = currentMessage;
     currentMessage = "";
     await sendMessage(messageContent);
